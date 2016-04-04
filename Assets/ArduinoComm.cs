@@ -10,6 +10,8 @@ public class ArduinoComm : MonoBehaviour
     private SerialPort comPort;
     private string[] comPortNames;
     private string message;
+    Vector3 offsetRotation;
+    bool bfirstRotation = false;
     Thread readThread;
     void Awake()
     {
@@ -93,8 +95,12 @@ public class ArduinoComm : MonoBehaviour
         if (myFloats.Length == 2)
         {
             print(message + "::::::::" + myFloats[0] + " " + myFloats[1] );
-            transform.rotation = Quaternion.Euler(- myFloats[0], myFloats[1], 0);
-
+            if (!bfirstRotation)
+            {
+                offsetRotation = new Vector3(-myFloats[0], myFloats[1], 0);
+                bfirstRotation = true;
+            }
+            transform.rotation = Quaternion.Euler(new Vector3(-myFloats[0], myFloats[1], 0) - offsetRotation);
         }
         else
         {
